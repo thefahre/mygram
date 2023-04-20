@@ -2,13 +2,27 @@ package routers
 
 import (
 	"mygram/controllers"
+	"mygram/docs"
 	"mygram/middlewares"
 
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title           mygram API - Fahreza
+// @version         0.0.1
+// @description     API endpoints for mygram
+
+// @contact.email  thefahre@gmail.com
+
+// @host      localhost:8080
+// @BasePath  /
+
+// @securityDefinitions.basic  BasicAuthg
 func StartApp() *gin.Engine {
 	r := gin.Default()
+	docs.SwaggerInfo.BasePath = "/"
 
 	userRouter := r.Group("/users")
 	{
@@ -45,5 +59,6 @@ func StartApp() *gin.Engine {
 		socialmediaRouter.PUT("/:socialmediaId", middlewares.SocialmediaAuthorization(), controllers.UpdateSocialmedia)
 		socialmediaRouter.DELETE("/:socialmediaId", middlewares.SocialmediaAuthorization(), controllers.DeleteSocialmedia)
 	}
+	r.GET("swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r
 }

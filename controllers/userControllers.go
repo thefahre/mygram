@@ -13,6 +13,14 @@ var (
 	appJSON = "application/json"
 )
 
+// UserRegister godoc
+// @Summary Register a new user
+// @Description Register a new user via endpoint
+// @Tags user
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.User
+// @Router /users/register [post]
 func UserRegister(c *gin.Context) {
 	db := database.GetDB()
 	contentType := helpers.GetContentType(c)
