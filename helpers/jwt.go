@@ -2,13 +2,15 @@ package helpers
 
 import (
 	"errors"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	_ "github.com/joho/godotenv/autoload"
 )
 
-var secretKey = "CraigBreen"
+var secretKey = os.Getenv("SECRET_KEY")
 
 func GenerateToken(id uint, email string) string {
 	claims := jwt.MapClaims{

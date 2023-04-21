@@ -68,12 +68,20 @@ func CommentAuthorization() gin.HandlerFunc {
 			})
 			return
 		}
+		photoId, err := strconv.Atoi(c.Param("photoId"))
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error":   "Bad Request",
+				"message": "invalid parameter",
+			})
+			return
+		}
 		userData := c.MustGet("userData").(jwt.MapClaims)
 		userID := uint(userData["id"].(float64))
 		// photoID := photoId
 		Comment := models.Comment{}
 
-		err = db.Select("user_id").First(&Comment, uint(commentId)).Error
+		err = db.Select("user_id").Where("photo_id = ?", photoId).First(&Comment, uint(commentId)).Error
 
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{

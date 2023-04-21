@@ -19,7 +19,8 @@ var (
 // @Tags user
 // @Accept json
 // @Produce json
-// @Success 200 {object} models.User
+// @Param payload body requests.UserRegisterRequest true "New User Data"
+// @Success 201 {object} requests.UserRegisterResponse
 // @Router /users/register [post]
 func UserRegister(c *gin.Context) {
 	db := database.GetDB()
@@ -50,6 +51,15 @@ func UserRegister(c *gin.Context) {
 	})
 }
 
+// UserLogingodoc
+// @Summary User login
+// @Description User login to obtain JWT Beraer token
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param payload body requests.UserLoginRequest true "Login Data"
+// @Success 200 {object} requests.UserLoginResponse
+// @Router /users/login [post]
 func UserLogin(c *gin.Context) {
 	db := database.GetDB()
 	contentType := helpers.GetContentType(c)

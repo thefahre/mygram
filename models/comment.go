@@ -8,7 +8,7 @@ import (
 )
 
 type Comment struct {
-	ID        uint `gorm:"primaryKey;autoIncrement" json:"id"`
+	ID        uint `gorm:"primaryKey" json:"id"`
 	UserID    uint
 	PhotoID   uint
 	Message   string `gorm:"not null;" json:"message" form:"message" valid:"required~message is required"`

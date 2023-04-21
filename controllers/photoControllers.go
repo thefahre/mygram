@@ -11,6 +11,16 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// CreatePhoto godoc
+// @Summary Create one new photo entry
+// @Description Create one new photo entry with logged in user
+// @Tags photo
+// @Accept json
+// @Produce json
+// @Param payload body requests.CreatePhotoRequest true "New Photo Data"
+// @Success 200 {object} models.Photo
+// @Router /photos/ [post]
+// @Security Bearer
 func CreatePhoto(c *gin.Context) {
 	db := database.GetDB()
 	userData := c.MustGet("userData").(jwt.MapClaims)
@@ -39,6 +49,17 @@ func CreatePhoto(c *gin.Context) {
 	c.JSON(http.StatusCreated, Photo)
 }
 
+// UpdatePhoto godoc
+// @Summary Update photo entry
+// @Description Update photo entry with logged in user (authorized user only)
+// @Tags photo
+// @Accept json
+// @Produce json
+// @Param id path int true "ID of photo to be updated"
+// @Param payload body requests.CreatePhotoRequest true "New Photo Data"
+// @Success 200 {object} models.Photo
+// @Router /photos/{id} [put]
+// @Security Bearer
 func UpdatePhoto(c *gin.Context) {
 	db := database.GetDB()
 	userData := c.MustGet("userData").(jwt.MapClaims)
@@ -72,11 +93,20 @@ func UpdatePhoto(c *gin.Context) {
 	c.JSON(http.StatusOK, Photo)
 }
 
+// GetAllPhoto godoc
+// @Summary Get all photo
+// @Description Get all photos with currently logged in user
+// @Tags photo
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Photo
+// @Router /photos/ [get]
+// @Security Bearer
 func GetAllPhoto(c *gin.Context) {
 	db := database.GetDB()
 	photos := []models.Photo{}
 
-	if err := db.Find(&photos).Error; err != nil {
+	if err := db.Preload("Comments").Find(&photos).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error":   "Bad Request",
 			"message": "unable to find any photo",
@@ -88,13 +118,23 @@ func GetAllPhoto(c *gin.Context) {
 	})
 }
 
+// GetOnePhoto godoc
+// @Summary Get one photo
+// @Description Get one photo with currently logged in user
+// @Tags photo
+// @Accept json
+// @Produce json
+// @Param id path int true "Photo ID"
+// @Success 200 {object} models.Photo
+// @Router /photos/{id} [get]
+// @Security Bearer
 func GetOnePhoto(c *gin.Context) {
 	db := database.GetDB()
 	// userData := c.MustGet("userData").(jwt.MapClaims)
 	photoId, _ := strconv.Atoi(c.Param("photoId"))
 	photo := []models.Photo{}
 
-	if err := db.Where("id = ?", photoId).First(&photo).Error; err != nil {
+	if err := db.Preload("Comments").Where("id = ?", photoId).First(&photo).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "photo id not found",
 		})
@@ -106,6 +146,16 @@ func GetOnePhoto(c *gin.Context) {
 	})
 }
 
+// DeletePhoto godoc
+// @Summary Delete photo entry
+// @Description Delete photo entry with logged in user (authorized user only)
+// @Tags photo
+// @Accept json
+// @Produce json
+// @Param id path int true "ID of photo to be deleted"
+// @Success 204 "No Content"
+// @Router /photos/{id} [delete]
+// @Security Bearer
 func DeletePhoto(c *gin.Context) {
 	db := database.GetDB()
 	userData := c.MustGet("userData").(jwt.MapClaims)

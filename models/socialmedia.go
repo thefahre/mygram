@@ -8,7 +8,7 @@ import (
 )
 
 type Socialmedia struct {
-	ID             uint   `gorm:"primaryKey;autoIncrement" json:"id"`
+	ID             uint   `gorm:"primaryKey" json:"id"`
 	Name           string `gorm:"not null;" json:"name" form:"name" valid:"required~name is required"`
 	SocialMediaURL string `gorm:"not null;" json:"social_media_url" form:"social_media_url" valid:"required~social_media_url is required"`
 	UserID         uint

@@ -19,7 +19,10 @@ import (
 // @host      localhost:8080
 // @BasePath  /
 
-// @securityDefinitions.basic  BasicAuthg
+// @securityDefinitions.apikey Bearer
+// @in header
+// @name Authorization
+// @description Type "Bearer" (CASE SENSITIVE!) followed by a space and JWT token. Token is obtained from login.
 func StartApp() *gin.Engine {
 	r := gin.Default()
 	docs.SwaggerInfo.BasePath = "/"
@@ -59,6 +62,7 @@ func StartApp() *gin.Engine {
 		socialmediaRouter.PUT("/:socialmediaId", middlewares.SocialmediaAuthorization(), controllers.UpdateSocialmedia)
 		socialmediaRouter.DELETE("/:socialmediaId", middlewares.SocialmediaAuthorization(), controllers.DeleteSocialmedia)
 	}
+	// r.GET("swagger/+any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	r.GET("swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r
 }

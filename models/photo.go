@@ -8,7 +8,7 @@ import (
 )
 
 type Photo struct {
-	ID        uint   `gorm:"primaryKey;autoIncrement" json:"id"`
+	ID        uint   `gorm:"primaryKey" json:"id"`
 	Title     string `gorm:"not null;" json:"title" form:"title" valid:"required~title is required"`
 	Caption   string `json:"caption" form:"caption"`
 	PhotoURL  string `gorm:"not null;" json:"photo_url" form:"photo_url" valid:"required~photo_url is required"`
